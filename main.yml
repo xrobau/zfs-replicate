@@ -1,0 +1,13 @@
+---
+- hosts: pull
+  roles:
+    - replication
+    - zfstrace
+
+- hosts: clients
+  roles:
+    - sshkeys
+    - packages
+    - zfstrace
+
+

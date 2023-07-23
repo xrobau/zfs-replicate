@@ -1,0 +1,22 @@
+---
+- name: Configure replications
+  include_tasks:
+    file: setup.yml
+    apply:
+      tags: rep
+  tags:
+    - rep
+    - onlysetup
+  when: backups[hostname] is defined
+
+- name: Create storage server replications
+  include_tasks:
+    file: replications.yml
+    apply:
+      tags: rep
+  with_items: "{{ backups[hostname] }}"
+  tags:
+    - rep
+  when: backups[hostname] is defined
+
+

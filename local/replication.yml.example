@@ -1,0 +1,60 @@
+---
+# Example replication file.
+#
+# The key (pull1) is used to match the hostname of machines in the
+# 'pull' group in the clients file, which then contains an array of
+# clients to pull from.
+#
+# Each client needs:
+#   remote:  a short name used to name the screen session
+#   type: 'local' or anything else
+#   tag: The tag used to match zvols to replicate
+#   dest: Where to store the snapshots on the pull server
+#   ip: The ip address to ssh to from the pull server
+#
+# You can also manually set 'keeptarget' and 'keepsource' to override
+# the default retention periods.
+#
+# 'type' explanation:
+# If you set the type to 'local', the default retention period is 10
+# snapshots. Additionally, other snapshots that have been manually
+# created are NOT replicated. This is expected to be used with an
+# A <--> B replication pair.
+# Setting it to anything else (eg 'remote') increases the retention
+# on the PULL SERVER (not the client), and replicates ALL SNAPSHOTS.
+#
+# See job.sh for implementation.
+#
+# 'tag' warning:
+# The replication monitoring script in /usr/local/replication will
+# only check zvols have have the tag 'replicate' on them. This is
+# so they can be excluded easily from the checks if they don't have
+# a lot of changes. You should probably always just use 'replicate'
+# until you've looked into the check-replication.sh script and
+# (possibly) modified it to your requirements.
+#
+
+backups:
+  pull1:
+    - remote: nas-198
+      type: local
+      tag: replicate
+      dest: jbod2/offsite-backups/nas-198
+      ip: 10.44.44.198
+    - remote: nas-196
+      type: local
+      tag: replicate
+      dest: jbod2/offsite-backups/nas-196
+      ip: 10.44.44.196
+    - remote: nas-195
+      type: local
+      tag: replicate
+      dest: jbod2/offsite-backups/nas-195
+      ip: 10.44.44.195
+    - remote: nas-194
+      type: local
+      tag: replicate
+      dest: jbod2/offsite-backups/nas-194
+      ip: 10.44.44.194
+
+

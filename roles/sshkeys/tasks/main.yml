@@ -1,0 +1,7 @@
+---
+- name: Make sure replication key is present
+  authorized_key:
+    comment: 'Auto-installed ssh key for zfs replication'
+    user: root
+    key: "{{ lookup('file', playbook_dir + '/local/id_rsa.pub') }}"
+    state: present

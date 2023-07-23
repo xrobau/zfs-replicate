@@ -1,0 +1,13 @@
+---
+- name: Install bpftrace for zfs.bt
+  package:
+    name:
+      - bpftrace
+    state: present
+
+- name: Copy zfs.bt to /root
+  copy:
+    src: zfs.bt
+    dest: /root/zfs.bt
+
+

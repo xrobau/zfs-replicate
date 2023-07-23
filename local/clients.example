@@ -1,0 +1,22 @@
+# This is an ansible host file, that is used to configure zfs replication
+# clients. Copy this from clients.example to clients, and update it with
+# your configuration
+
+# These are the hosts that pull from clients. They will have the
+# zfs_autobackup package installed.
+#
+# The 'hostname' is required on pull servers to match the name in the
+# replication.yml configuration file.
+[pull]
+10.44.44.200 hostname=pull1
+
+# These are the clients that the pull server(s) reach out to. Clients
+# can be servers, so if you're just doing A <--> B replication, both
+# machines would be in pull AND clients. Hostnames here are not used,
+# but are recommended to ease your life when you are trying to remember
+# which machine is which.
+[clients]
+10.44.44.196 hostname=nas-196
+10.44.44.195 hostname=nas-195
+10.44.44.194 hostname=nas-194
+

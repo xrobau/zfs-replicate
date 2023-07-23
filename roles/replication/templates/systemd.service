@@ -1,0 +1,16 @@
+[Unit]
+Description=Replication Service for {{ hostname }} to {{ item.remote }}
+After=network.target
+StartLimitBurst=5
+StartLimitIntervalSec=0
+
+
+[Service]
+Type=forking
+Restart=always
+RestartSec=5
+ExecStart=/usr/bin/screen -L -dmS {{hostname}}_{{item.remote}} /usr/local/replicate/job.{{item.remote}}.sh
+
+[Install]
+WantedBy=multi-user.target
+

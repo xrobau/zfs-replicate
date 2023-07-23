@@ -1,0 +1,41 @@
+---
+- name: Create ssh keys folder
+  file:
+    state: directory
+    path: /usr/local/replicate/ssh
+
+- name: Put ssh keys in place
+  copy:
+    src: "{{ playbook_dir + '/local/' + item }}"
+    dest: /usr/local/replicate/ssh/
+    mode: 0700
+  with_items:
+    - id_rsa
+    - id_rsa.pub
+
+- name: Put ssh_config in place
+  template:
+    src: ssh_config
+    dest: /usr/local/replicate/ssh/
+    mode: 0700
+
+- name: Put check script in place
+  template:
+    src: check-replication.sh
+    dest: /usr/local/replicate/
+    mode: 0755
+  tags:
+    - onlysetup
+
+- name: Check if zfs_autobackup 3.2b1 is installed
+  stat:
+    path: /usr/local/pip/zfs_autobackup-3.2b1.dist-info
+  register: backstat
+
+- name: Install zfs_autobackup if it's missing
+  pip:
+    name: zfs_autobackup
+    state: present
+    version: "3.2b1"
+    extra_args: "--pre --upgrade --target=/usr/local/pip --force"
+  when: backstat.stat.exists == false

@@ -1,0 +1,8 @@
+---
+- name: Make sure required packages are installed
+  package:
+    name:
+      - mbuffer
+      - pigz
+      - bpftrace
+    state: present

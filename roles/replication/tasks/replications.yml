@@ -1,0 +1,43 @@
+---
+- name: Check backup destination
+  shell:
+    cmd: zfs list {{ item.dest }}
+  failed_when: false
+  changed_when: false
+  register: dest
+
+- name: Create backup dest if missing
+  shell: zfs create {{ item.dest }}
+  when: dest.rc == 1
+
+- name: Put backup script in place
+  template:
+    src: job.sh
+    dest: /usr/local/replicate/job.{{ item.remote }}.sh
+    mode: 0755
+  register: jobupdate
+
+- name: Put service in place
+  template:
+    src: systemd.service
+    dest: /etc/systemd/system/replicate-{{ item.remote }}.service
+    mode: 0644
+  notify:
+    - systemctl-reload
+
+- meta: flush_handlers
+
+- name: Restart the service
+  systemd:
+    state: restarted
+    enabled: yes
+    name: replicate-{{ item.remote }}
+  when: jobupdate.changed
+
+- name: Make sure the service is running
+  systemd:
+    state: started
+    enabled: yes
+    name: replicate-{{ item.remote }}
+  when: jobupdate.changed == false
+

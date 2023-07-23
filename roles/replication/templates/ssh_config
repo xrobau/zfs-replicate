@@ -1,0 +1,15 @@
+Host *
+  User root
+  ForwardAgent yes
+  IdentityFile /usr/local/replicate/ssh/id_rsa
+  ControlPath ~/.ssh/control-master-%r@%h:%p
+  ControlMaster auto
+  ControlPersist 3600
+{% for i in backups[hostname] %}
+
+Host {{ i.remote }}
+  Hostname {{ i.ip }}
+  Compression no
+  Ciphers aes128-ctr
+{% endfor %}
+
